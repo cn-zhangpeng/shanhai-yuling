@@ -10,7 +10,15 @@
 
 ## 长什么样
 
+<p align="center"><img src="docs/走路循环.gif" width="290" alt="站起来走两步"></p>
+
 <p align="center"><img src="docs/降级提示_缺动作帧.png" width="360" alt="挂在桌面上"></p>
+
+25 个动作帧全在这张图上（少帧时她会直接说“演不了”，不会硬演）：
+
+<p align="center"><img src="docs/动作总览.png" width="620" alt="全部 25 个动作帧"></p>
+
+设置页（形象 / 常用语）：
 
 <p align="center">
   <img src="docs/设置页_形象.png" width="460" alt="设置页 · 形象">
@@ -50,7 +58,7 @@ shanhai-yuling/
 │  ├─ sim_hotkey.py        发 Ctrl+Alt+N 验证快捷键链路
 │  ├─ check_lock.py        读扩展样式验证"锁定=鼠标穿透"
 │  └─ normalize_walk.py / build_walk_cycle2.py / match_sit_head.py …  素材归一化脚本
-├─ docs/                   需求文档（v1.2 评审修订版）+ 生灵包规范.md + 设置页截图
+├─ docs/                   需求文档（v1.2 评审修订版）+ 生灵包规范.md + 动作总览 / 走路 GIF / 设置页截图
 ├─ web-prototype/          早期单文件 HTML 原型
 ├─ art/                    人物原始照片与分层母版（.gitignore 排除，未成年人肖像合规）
 └─ dist/                   打包产物（.gitignore 排除）
