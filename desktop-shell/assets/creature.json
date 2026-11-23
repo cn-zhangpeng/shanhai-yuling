@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ranran",
+  "displayName": "冉冉",
+  "_说明": "内置生灵的清单。帧文件沿用 assets/ 里的历史素材（ranran_*_2x.png），所以不写 frames 也认得出——文件名按 _ 切词后含 base / blink / walkA 这些帧名就自动认领。别人的生灵包请照 docs/生灵包规范.md 建目录，图放 frames/ 里。",
+  "window": {
+    "petHeight": 600,
+    "_说明": "宠物显示高度（CSS px）。窗口宽高由它 + base 图的宽高比算出来，不用手填。"
+  },
+  "companion": {
+    "file": "ant_walk.png",
+    "frames": 9,
+    "cellW": 340,
+    "cellH": 332,
+    "contentW": 265,
+    "_说明": "伴生灵（小蚂蚁）。9 格横向雪碧图，格子顺序见 ant_walk.json。没有伴生灵的生灵包把这一段整个删掉即可。"
+  },
+  "lines": "lines.json",
+  "profile": {
+    "relation": "爸爸",
+    "ageVoice": "5岁女孩，短句、奶声、不绕弯"
+  },
+  "behavior": {
+    "mode": "quiet",
+    "modes": {
+      "quiet": { "label": "安静模式", "greetPerMin": 0.15 },
+      "lively": { "label": "活泼模式", "greetPerMin": 0.35 }
+    }
+  }
+}

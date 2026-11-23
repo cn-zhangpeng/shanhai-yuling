@@ -1,0 +1,15 @@
+{
+  "name": "shanhai-yuling-desktop-shell",
+  "version": "0.1.0",
+  "private": true,
+  "description": "山海遇灵 · 桌面生灵（过渡预览壳：透明置顶 + 分区鼠标穿透）",
+  "license": "MIT",
+  "author": "山海紫穹",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^33.0.0"
+  }
+}

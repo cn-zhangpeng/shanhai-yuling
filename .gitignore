@@ -1,0 +1,46 @@
+# ===== 依赖与构建产物 =====
+node_modules/
+dist/
+tools/_build_deps/
+tools/psd2live/
+tools/PSD2Live-*.zip
+*.log
+_bounds.log
+_scene.log
+
+# ===== 构建生成物 =====
+# build_installer.py 会把带本机绝对路径的 .nsi 写到这个目录，属于生成物，不入库
+tools/_installer/*.nsi
+
+# ===== 素材中间产物 =====
+# 抠图源、对照图、临时帧、旧版备份都是处理过程留下的，占体积且不可复现，
+# 运行只需要 desktop-shell/assets 根目录下的成品帧（ranran_*_2x.png / ant_walk.png / icon）
+desktop-shell/assets/_*
+
+# ===== 人物原始照片与分层母版：不入公开仓库（未成年人肖像合规） =====
+art/
+*.psd
+*.moc3
+*.cmo3
+*.p2lrt
+*.p2l
+
+# ===== 运行时配置（含窗口位置等个人状态） =====
+config/
+global-config.json
+*.bak
+
+# ===== 验收脚本的临时产物 =====
+desktop-shell/tests/_*
+
+# ===== Python 缓存 =====
+__pycache__/
+*.py[cod]
+
+# ===== 编辑器 / 系统杂物 =====
+.vscode/
+.idea/
+*.suo
+*.swp
+Thumbs.db
+.DS_Store

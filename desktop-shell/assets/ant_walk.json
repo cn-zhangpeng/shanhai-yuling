@@ -1,0 +1,16 @@
+{
+  "cellW": 340,
+  "cellH": 332,
+  "frames": 9,
+  "order": [
+    "idle",
+    "stepL",
+    "stepR",
+    "fast",
+    "sit",
+    "lookUp",
+    "hop",
+    "sideRun",
+    "flop"
+  ]
+}

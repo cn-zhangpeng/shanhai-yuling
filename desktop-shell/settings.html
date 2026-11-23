@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>山海遇灵 · 设置</title>
+<style>
+  :root{
+    --paper:#FCFAF6; --ink:#4A3B32; --ink-soft:#8A7A6E; --line:#E3D7C7;
+    --accent:#8C3B2E; --accent-soft:#F3E4DD; --ok:#3F7A5A; --warn:#A5701B; --bad:#A33A2E;
+  }
+  *{box-sizing:border-box}
+  input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px}
+  html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);
+    font-family:"Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;font-size:14px}
+  body{display:flex;flex-direction:column}
+  header{padding:18px 22px 0;border-bottom:1px solid var(--line);background:#fff}
+  h1{margin:0 0 14px;font-size:17px;font-weight:600;letter-spacing:.5px}
+  .tabs{display:flex;gap:4px}
+  .tabs button{border:1px solid var(--line);border-bottom:none;background:#F6F1E9;color:var(--ink-soft);
+    padding:9px 18px;border-radius:8px 8px 0 0;cursor:pointer;font-size:14px}
+  .tabs button.on{background:#fff;color:var(--accent);font-weight:600}
+  main{flex:1;overflow:auto;padding:18px 22px 26px}
+  section{display:none}
+  section.on{display:block}
+  .row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  label{color:var(--ink-soft);min-width:64px}
+  select,input,button{font-family:inherit;font-size:14px}
+  select,input[type=text],input[type=number]{padding:7px 10px;border:1px solid var(--line);border-radius:8px;
+    background:#fff;color:var(--ink)}
+  select{min-width:240px}
+  button{padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);cursor:pointer}
+  button:hover{border-color:#CDBBAA}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.ghost{background:transparent}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;background:var(--accent-soft);color:var(--accent)}
+  .badge.ok{background:#E5F1E9;color:var(--ok)}
+  .badge.warn{background:#F7EDD8;color:var(--warn)}
+  .badge.bad{background:#F7E3E0;color:var(--bad)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+  .kv{display:grid;grid-template-columns:96px 1fr;gap:8px 14px;line-height:1.6}
+  .kv dt{color:var(--ink-soft)}
+  .kv dd{margin:0;word-break:break-all}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+  .tip{color:var(--ink-soft);font-size:13px;line-height:1.7}
+  .help{margin-top:18px;font-size:13px;color:var(--ink-soft);line-height:1.8}
+  .help summary{cursor:pointer;color:var(--accent);font-size:13px}
+  .help code{background:#F3EEE6;border-radius:5px;padding:1px 5px;font-size:12px}
+  .help ol,.help ul{padding-left:20px;margin:8px 0}
+  .help li{margin-bottom:5px}
+  .help b{color:var(--ink)}
+  .bad{color:var(--bad)}
+  #linesList{display:flex;flex-direction:column;gap:8px}
+  .line-row{display:grid;grid-template-columns:1fr 108px 64px 116px 74px 118px;
+    gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+  .line-row .tags{display:flex;gap:10px;font-size:12px;color:var(--ink-soft);white-space:nowrap}
+  .line-row .tags label{min-width:0;display:flex;align-items:center;gap:4px;color:var(--ink-soft)}
+  .line-row .ops{display:flex;gap:6px;justify-content:flex-end}
+  .line-row button{padding:5px 9px;font-size:12px}
+  .line-head{display:grid;grid-template-columns:1fr 108px 64px 116px 74px 118px;gap:8px;
+    padding:0 10px;color:var(--ink-soft);font-size:12px}
+  .empty{padding:26px;text-align:center;color:var(--ink-soft);border:1px dashed var(--line);border-radius:12px}
+  /* 素材页：逐帧一行，左边 76px 透明底预览 */
+  .frame-head{display:grid;grid-template-columns:92px 108px 1fr 190px 150px;gap:10px;
+    padding:0 10px;color:var(--ink-soft);font-size:12px;margin:8px 0 6px}
+  .frame-row{display:grid;grid-template-columns:92px 108px 1fr 190px 150px;gap:10px;align-items:center;
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:8px}
+  .frame-row.miss{background:#FBF8F3;border-style:dashed}
+  .frame-row .name{font-weight:600}
+  .frame-row .rel{color:var(--ink-soft);font-size:12px;word-break:break-all}
+  .frame-row .ops{display:flex;gap:6px;justify-content:flex-end}
+  .frame-row button{padding:5px 10px;font-size:12px}
+  .thumb{width:76px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:8px;
+    background-color:#fff;background-image:repeating-conic-gradient(#EDE6DC 0 25%,#FFF 0 50%);background-size:14px 14px}
+  .thumb img{max-width:76px;max-height:76px;display:block}
+  .thumb.miss{background:#F7F3EC;color:var(--ink-soft);font-size:12px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#3A2E26;color:#fff;
+    padding:9px 16px;border-radius:9px;opacity:0;transition:opacity .2s;pointer-events:none;font-size:13px}
+  .toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>山海遇灵 · 设置</h1>
+  <div class="tabs">
+    <button data-tab="creature" class="on">形象</button>
+    <button data-tab="frames">素材</button>
+    <button data-tab="lines">常用语</button>
+  </div>
+</header>
+
+<main>
+  <section id="tab-creature" class="on">
+    <div class="row">
+      <label>换成谁</label>
+      <select id="creatureSelect"></select>
+      <span id="statusBadge" class="badge">—</span>
+    </div>
+
+    <div class="card">
+      <dl class="kv">
+        <dt>名字</dt><dd id="infoName">—</dd>
+        <dt>目录</dt><dd id="infoDir">—</dd>
+        <dt>帧</dt><dd id="infoFrames">—</dd>
+        <dt>帧轨道</dt><dd id="infoManifest">—</dd>
+        <dt>图片尺寸</dt><dd id="infoSize">—</dd>
+        <dt>伴生灵</dt><dd id="infoCompanion">—</dd>
+        <dt>常用语</dt><dd id="infoLines">—</dd>
+        <dt>可用动作</dt><dd id="infoCaps">—</dd>
+      </dl>
+    </div>
+
+    <div class="actions">
+      <button id="openUser">打开生灵目录</button>
+      <button id="openBuiltin">打开原始素材（只读种子）</button>
+      <button id="rescan" class="ghost">重新扫描</button>
+    </div>
+
+    <details class="help" open>
+      <summary>生灵目录怎么摆（不用改代码，也不用装 Python）</summary>
+      <p class="tip">所有形象都住在同一个根下，<b>一个文件夹 = 一只萌宠，文件夹名就是它的名字</b>。冉冉也在里面（首次启动从程序目录的原始素材复制一份种子），和用户自定义的完全同级：</p>
+      <p class="tip" style="margin-left:8px">生灵目录\<br>&nbsp;&nbsp;冉冉\<br>&nbsp;&nbsp;用户自定义1\<br>&nbsp;&nbsp;用户自定义2\</p>
+      <ol>
+        <li>改现成的：设置页 → <b>素材</b> → 找到动作帧点「替换」。</li>
+        <li>另起一只：设置页 → 素材 →「复制为新形象」（生成 <code>用户自定义N</code>），或点上面「打开生灵目录」自己新建一个文件夹。</li>
+        <li>自己建的话：文件夹里建 <code>frames</code> 子目录，把图片丢进去，<b>文件名直接用下面这些帧名</b>；回本页点「重新扫描」，下拉框里就多一项。</li>
+      </ol>
+      <p><b>最少只要一张</b> <code>base.png</code>（坐姿）：能显示、能拖、能点。走 / 跳 / 看手机会自动禁用并写明原因，这不算坏，只是这套图没那些动作。</p>
+      <p><b>图片要求</b></p>
+      <ul>
+        <li><b>透明底 PNG</b>：四角必须透明，不要白底、不要画背景。带底色的图会连背景一起贴到桌面上。</li>
+        <li><b>一套图宽高完全一致</b>：<span id="sizeHint">—</span></li>
+        <li><b>脚踩同一条水平线</b>：站姿和 4 张走路帧的脚底要对齐，否则走路时整只会浮空或陷进桌面。</li>
+        <li><b>统一朝画面左边画</b>：往右走时程序整体镜像，画成朝右就是倒着走。</li>
+        <li><b>头顶不用量</b>：气泡锚点由程序扫透明像素自动算，写 <code>creature.json</code> 的 <code>headTop</code> 才覆盖。</li>
+      </ul>
+      <p id="frameNameList" class="tip"></p>
+      <p>可选：文件夹里放 <code>creature.json</code> 可以改显示名 / 窗口高度 / 伴生灵；放 <code>lines.json</code> 写台词（也可以直接在「常用语」页改）。</p>
+      <p>给维护者：批量自检脚本 <code>tools\check_creature.py</code> 需要 Python，普通使用不用跑它——缺哪些帧、尺寸对不对，本页这里都会直接标出来。清单里写了帧轨道（v2）时，也可以直接 <code>node desktop-shell\tools\validate-creature.js &lt;生灵目录&gt;</code> 核对轨道/序列/相位与诊断。</p>
+    </details>
+  </section>
+
+  <section id="tab-frames">
+    <div class="row">
+      <label>当前生灵</label>
+      <span id="framesOwner" class="badge">—</span>
+      <span id="framesHint" class="tip"></span>
+    </div>
+
+    <div id="cloneBox" class="card">
+      <p class="tip" style="margin-top:0">想留一份底再改？点「复制为新形象」，把现在这只整体复制成 <code>用户自定义N</code> 并切过去——两只从此各改各的，互不影响。</p>
+      <div class="actions">
+        <button id="cloneCreature">复制为新形象</button>
+      </div>
+    </div>
+
+    <p class="tip">一行一个动作帧。上传的图存进这只生灵目录的 <code>frames\&lt;帧名&gt;.png</code>，并写进 <code>creature.json</code> 做显式绑定；<b>上传即生效，不用重启</b>。图不对（尺寸不符、四角不透明）会被直接挡下来，不会写进去。</p>
+
+    <div class="frame-head">
+      <span>预览</span><span>帧名</span><span>这个动作</span><span>当前文件</span><span></span>
+    </div>
+    <div id="framesList"></div>
+  </section>
+
+  <section id="tab-lines">
+    <div class="row">
+      <label>当前生灵</label>
+      <span id="linesOwner" class="badge">—</span>
+      <span id="linesCount" class="tip"></span>
+    </div>
+    <p class="tip">改完点保存，桌宠立刻生效，不用重启。权重越大越常说；权重 0 = 停用这句。</p>
+    <div class="line-head">
+      <span>说什么</span><span>分类</span><span>权重</span><span>档位</span><span>冷却(秒)</span><span></span>
+    </div>
+    <div id="linesList"></div>
+    <div class="actions" style="margin-top:14px">
+      <button id="addLine" class="ghost">+ 加一句</button>
+      <button id="saveLines" class="primary">保存</button>
+      <button id="resetLines">恢复默认</button>
+      <span id="linesTip" class="tip"></span>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const CATS = [
+  ['request','撒娇要求'], ['greeting','主动问候'], ['hover','鼠标悬停'],
+  ['click','被点击'], ['idle','自言自语'], ['ant','关于伴生灵'], ['locked','锁定后']
+];
+const $ = (id)=> document.getElementById(id);
+let STATE = null;
+let DRAFT = [];
+let FRAMES = null;
+
+/* 帧名 → 这个动作是干什么的（素材页每行右侧的说明） */
+const FRAME_LABEL = {
+  base:'坐姿·基准（必须有）', blink:'坐姿·眨眼', talk:'坐姿·说话', smile:'坐姿·月牙笑',
+  turn:'坐姿·转头', turnL:'坐姿·转头（左）', wave:'坐姿·挥手', noant:'坐姿·空手兜底',
+  stand:'站姿', walkA:'走·接触左', walkB:'走·过渡', walkP1:'走·接触右', walkP2:'走·过渡',
+  phone:'蹲角落玩手机', ropeAir:'跳绳·腾空', ropeLand:'跳绳·落地',
+  ntTurn:'空手·转头', ntTurnL:'空手·转头（左）', ntSmile:'空手·月牙笑', ntWave:'空手·挥手',
+  ntBlink:'空手·眨眼', footSwing:'坐姿·晃脚', handEar:'坐姿·抚帽边',
+  ntFootSwing:'空手·晃脚', ntHandEar:'空手·抚帽边'
+};
+
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(()=>t.classList.remove('on'), 1800);
+}
+
+function statusOf(c){
+  if(c.status === 'broken') return ['损坏：缺 base','bad'];
+  if(c.status === 'static') return ['静态：只有一张图','warn'];
+  return ['完整','ok'];
+}
+
+function capText(caps){
+  if(!caps) return '—';
+  const parts = [];
+  parts.push(caps.walk ? '走动 ✓' : '走动 ✗');
+  parts.push(caps.rope ? '跳绳 ✓' : '跳绳 ✗');
+  parts.push(caps.phone ? '玩手机 ✓' : '玩手机 ✗');
+  parts.push(caps.play ? '陪伴生灵 ✓' : '陪伴生灵 ✗');
+  return parts.join('　');
+}
+
+/* ---------------- 形象 ---------------- */
+function renderCreatures(){
+  const sel = $('creatureSelect');
+  sel.innerHTML = '';
+  for(const c of STATE.creatures){
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    const [label] = statusOf(c);
+    const who = c.id === c.displayName ? c.displayName : `${c.displayName}　（${c.id}）`;
+    opt.textContent = `${who} — ${label}`;
+    if(c.status === 'broken') opt.disabled = true;
+    if(c.id === STATE.currentId) opt.selected = true;
+    sel.appendChild(opt);
+  }
+  const cur = STATE.creatures.find(c => c.id === STATE.currentId);
+  if(!cur){
+    $('statusBadge').textContent = '没有可用的生灵';
+    $('statusBadge').className = 'badge bad';
+    return;
+  }
+  const [label, cls] = statusOf(cur);
+  $('statusBadge').textContent = label;
+  $('statusBadge').className = 'badge ' + cls;
+  $('infoName').textContent = cur.displayName + '　（' + cur.id + '）';
+  $('infoDir').textContent = cur.dir;
+  $('infoFrames').textContent = cur.frameCount + ' / ' + STATE.frameNames.length +
+    (cur.missing.length ? '　缺：' + cur.missing.join('、') : '　（齐了）');
+  const diag = cur.diagnostics || [];
+  const diagErr = diag.filter(d => d.level === 'error');
+  const diagWarn = diag.filter(d => d.level === 'warn');
+  if(cur.trackCount || diag.length){
+    $('infoManifest').textContent = (cur.trackCount || 0) + ' 条轨道' +
+      (diagErr.length ? `　错误 ${diagErr.length} 条` : '') +
+      (diagWarn.length ? `　警告 ${diagWarn.length} 条` : '') +
+      (diag.length ? '　（清单有问题，具体见验证工具输出）' : '　（校验通过）');
+    $('infoManifest').className = diagErr.length ? 'bad' : '';
+    $('infoManifest').title = diag.map(d => `[${d.level}] ${d.code} @ ${d.where} — ${d.message}`).join('\n');
+  }else{
+    $('infoManifest').textContent = '—（老清单，按默认节拍播放）';
+    $('infoManifest').className = '';
+    $('infoManifest').title = '';
+  }
+  $('infoCompanion').textContent = cur.hasCompanion ? '有（雪碧图）' : '无';
+  $('infoLines').textContent = cur.lineCount ? cur.lineCount + ' 条' : '没有 lines.json（可以在这里加）';
+  $('infoCaps').textContent = capText(cur.caps);
+  const mm = cur.sizeMismatch || [];
+  if(cur.size){
+    $('infoSize').textContent = `${cur.size.w} × ${cur.size.h}` +
+      (mm.length ? `　不一致 ${mm.length} 张：${mm.join('、')}` : '　（一套图一致）');
+    $('infoSize').className = mm.length ? 'bad' : '';
+  }else{
+    $('infoSize').textContent = '—';
+  }
+  $('sizeHint').textContent = cur.size
+    ? `当前这套是 ${cur.size.w} × ${cur.size.h}，按这个尺寸画最省事；等比缩小（比如 ${Math.round(cur.size.w / 2)} × ${Math.round(cur.size.h / 2)}）也可以，但一套里必须完全一致。`
+    : '同一套图宽高必须完全一致，建议 900 × 1360（或等比缩小）。';
+  $('frameNameList').innerHTML = '帧名清单（文件名里带上这些词就算认领）：' +
+    STATE.frameNames.map(n => '<code>' + n + '</code>').join(' ');
+}
+
+/* ---------------- 常用语 ---------------- */
+function renderLines(){
+  const list = $('linesList');
+  list.innerHTML = '';
+  $('linesOwner').textContent = (STATE.displayName || STATE.currentId || '—');
+  $('linesCount').textContent = DRAFT.length ? `共 ${DRAFT.length} 条` : '还没有台词';
+  if(!DRAFT.length){
+    list.innerHTML = '<div class="empty">这个生灵还没有常用语。点下面「+ 加一句」开始写。</div>';
+    return;
+  }
+  DRAFT.forEach((l, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'line-row';
+
+    const text = document.createElement('input');
+    text.type = 'text';
+    text.value = l.t || '';
+    text.placeholder = '她会说的那句话…';
+    text.addEventListener('input', ()=>{ l.t = text.value; });
+
+    const cat = document.createElement('select');
+    for(const [v, n] of CATS){
+      const o = document.createElement('option');
+      o.value = v; o.textContent = n;
+      if(l.c === v) o.selected = true;
+      cat.appendChild(o);
+    }
+    cat.addEventListener('change', ()=>{ l.c = cat.value; });
+
+    const weight = document.createElement('input');
+    weight.type = 'number'; weight.min = '0'; weight.max = '20'; weight.value = l.w;
+    weight.addEventListener('input', ()=>{ l.w = Number(weight.value) || 0; });
+
+    const tags = document.createElement('div');
+    tags.className = 'tags';
+    for(const [v, n] of [['quiet','安静'], ['lively','活泼']]){
+      const wrap = document.createElement('label');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = (l.tags || []).includes(v);
+      cb.addEventListener('change', ()=>{
+        const set = new Set(l.tags || []);
+        cb.checked ? set.add(v) : set.delete(v);
+        l.tags = set.size ? [...set] : ['quiet'];
+      });
+      wrap.appendChild(cb); wrap.appendChild(document.createTextNode(n));
+      tags.appendChild(wrap);
+    }
+
+    const cd = document.createElement('input');
+    cd.type = 'number'; cd.min = '0'; cd.step = '30'; cd.value = l.cd;
+    cd.addEventListener('input', ()=>{ l.cd = Number(cd.value) || 0; });
+
+    const ops = document.createElement('div');
+    ops.className = 'ops';
+    const pv = document.createElement('button');
+    pv.textContent = '试一句';
+    pv.addEventListener('click', async ()=>{
+      if(!l.t){ toast('这句还是空的'); return; }
+      await window.settingsAPI.preview(l.t);
+      toast('已发到桌宠上');
+    });
+    const del = document.createElement('button');
+    del.textContent = '删';
+    del.addEventListener('click', ()=>{ DRAFT.splice(idx, 1); renderLines(); });
+    ops.appendChild(pv); ops.appendChild(del);
+
+    row.appendChild(text); row.appendChild(cat); row.appendChild(weight);
+    row.appendChild(tags); row.appendChild(cd); row.appendChild(ops);
+    list.appendChild(row);
+  });
+}
+
+function newLineId(cat){
+  let n = 1;
+  const ids = new Set(DRAFT.map(l => l.i || ''));
+  while(ids.has(cat + '_n' + n)) n++;
+  return cat + '_n' + n;
+}
+
+/* ---------------- 素材（逐帧上传） ---------------- */
+async function loadFrames(){
+  try{
+    FRAMES = await window.settingsAPI.frames();
+  }catch(e){
+    FRAMES = { ok:false, error:e.message };
+  }
+  renderFrames();
+}
+
+function renderFrames(){
+  const d = FRAMES;
+  const list = $('framesList');
+  if(!d || !d.ok){
+    $('framesOwner').textContent = '—';
+    $('framesHint').textContent = (d && d.error) ? d.error : '读不到当前生灵的素材';
+    $('cloneBox').style.display = 'none';
+    list.innerHTML = '';
+    return;
+  }
+  const have = d.rows.filter(r => r.has).length;
+  $('framesOwner').textContent = d.id === d.displayName ? d.displayName : (d.displayName + '　（' + d.id + '）');
+  $('framesHint').textContent = (d.size
+    ? `基准 ${d.size.w} × ${d.size.h}　已 ${have} / ${d.rows.length} 帧`
+    : '还没有 base 帧，先传一张坐姿') + '　目录：' + d.dir;
+
+  list.innerHTML = '';
+  for(const r of d.rows){
+    const row = document.createElement('div');
+    row.className = 'frame-row' + (r.has ? '' : ' miss');
+
+    const th = document.createElement('div');
+    th.className = 'thumb' + (r.has ? '' : ' miss');
+    if(r.has && r.url){
+      const im = document.createElement('img');
+      im.src = r.url;
+      im.alt = r.name;
+      th.appendChild(im);
+    }else{
+      th.textContent = '缺';
+    }
+
+    const nm = document.createElement('div');
+    nm.className = 'name';
+    nm.textContent = r.name;
+
+    const desc = document.createElement('div');
+    desc.className = 'tip';
+    let text = FRAME_LABEL[r.name] || '';
+    if(r.mismatch && r.size) text += `　· 尺寸 ${r.size.width}×${r.size.height} 不一致`;
+    desc.textContent = text;
+
+    const rel = document.createElement('div');
+    rel.className = 'rel';
+    rel.textContent = r.has ? r.rel : '— 还没有这张';
+
+    const ops = document.createElement('div');
+    ops.className = 'ops';
+
+    const up = document.createElement('button');
+    up.textContent = r.has ? '替换' : '上传';
+    up.addEventListener('click', async ()=>{
+      const res = await window.settingsAPI.uploadFrame(r.name);
+      if(!res || res.canceled) return;
+      if(!res.ok){ toast(res.error || '上传失败'); return; }
+      toast('已换上「' + r.name + '」，桌宠立即生效');
+      await loadFrames();
+      await loadState();
+    });
+
+    const cl = document.createElement('button');
+    cl.className = 'ghost';
+    cl.textContent = '清除';
+    cl.disabled = !r.has;
+    cl.addEventListener('click', async ()=>{
+      const res = await window.settingsAPI.clearFrame(r.name);
+      if(!res || !res.ok){ toast((res && res.error) || '清除失败'); return; }
+      toast(res.note || ('已清除「' + r.name + '」'));
+      await loadFrames();
+      await loadState();
+    });
+
+    ops.appendChild(up); ops.appendChild(cl);
+    row.appendChild(th); row.appendChild(nm); row.appendChild(desc); row.appendChild(rel); row.appendChild(ops);
+    list.appendChild(row);
+  }
+}
+
+/* ---------------- 页签 ---------------- */
+function showTab(name){
+  for(const x of document.querySelectorAll('.tabs button')) x.classList.toggle('on', x.dataset.tab === name);
+  for(const s of document.querySelectorAll('main section')) s.classList.toggle('on', s.id === 'tab-' + name);
+  document.querySelector('main').scrollTop = 0;
+  if(name === 'frames') loadFrames();
+}
+
+/* ---------------- 数据装载 ---------------- */
+async function loadState(){
+  STATE = await window.settingsAPI.getState();
+  renderCreatures();
+  DRAFT = (STATE.lines || []).map(l => ({
+    i: l.i, c: l.c, t: l.t, w: l.w, cd: l.cd, tags: [...(l.tags || ['quiet','lively'])]
+  }));
+  renderLines();
+  /* 从菜单「常用语…」进来时地址带 #lines，直接停在这一页 */
+  const tab = location.hash.replace('#', '');
+  if(tab) showTab(tab);
+}
+
+/* ---------------- 事件 ---------------- */
+for(const b of document.querySelectorAll('.tabs button')){
+  b.addEventListener('click', ()=> showTab(b.dataset.tab));
+}
+
+$('creatureSelect').addEventListener('change', async (e)=>{
+  const id = e.target.value;
+  const r = await window.settingsAPI.selectCreature(id);
+  if(r && r.ok) toast('已换成「' + (r.displayName || id) + '」');
+  else toast(r && r.error ? r.error : '换不了，这个目录读不出来');
+  await loadState();
+});
+
+$('openUser').addEventListener('click', ()=> window.settingsAPI.openFolder('user').then(()=>toast('目录已打开')));
+$('openBuiltin').addEventListener('click', ()=> window.settingsAPI.openFolder('builtin').then(()=>toast('目录已打开')));
+$('rescan').addEventListener('click', async ()=>{ await loadState(); await loadFrames(); toast('已重新扫描'); });
+
+$('cloneCreature').addEventListener('click', async ()=>{
+  const res = await window.settingsAPI.cloneCreature();
+  if(res && res.ok){
+    toast('已复制成「' + res.id + '」并切过去了，两只各改各的');
+    await loadState();
+    await loadFrames();
+    showTab('frames');
+  }else{
+    toast((res && res.error) || '复制失败');
+  }
+});
+
+$('addLine').addEventListener('click', ()=>{
+  DRAFT.push({ i: newLineId('idle'), c: 'idle', t: '', w: 3, cd: 900, tags: ['quiet','lively'] });
+  renderLines();
+});
+
+$('saveLines').addEventListener('click', async ()=>{
+  const bad = DRAFT.filter(l => !String(l.t || '').trim());
+  if(bad.length){
+    toast('有 ' + bad.length + ' 条内容是空的，先补上或删掉');
+    return;
+  }
+  const r = await window.settingsAPI.saveLines(STATE.currentId, DRAFT);
+  if(r && r.ok){
+    toast('已保存 ' + r.count + ' 条，桌宠立即生效');
+    await loadState();
+  } else toast(r && r.error ? r.error : '保存失败');
+});
+
+$('resetLines').addEventListener('click', async ()=>{
+  const r = await window.settingsAPI.resetLines(STATE.currentId);
+  if(r && r.ok){ toast('已恢复成这个生灵自带的台词'); await loadState(); }
+  else toast('恢复失败');
+});
+
+if(window.settingsAPI.onStateChanged){
+  window.settingsAPI.onStateChanged((s)=>{
+    STATE = s;
+    renderCreatures();
+    /* 正停在「素材」页就一起刷，否则复制完还显示复制前的内置视图 */
+    if($('tab-frames').classList.contains('on')) loadFrames();
+  });
+}
+
+loadState().catch((e)=>{
+  document.querySelector('main').innerHTML = '<div class="empty">读不到设置：' + e.message + '</div>';
+});
+</script>
+</body>
+</html>
